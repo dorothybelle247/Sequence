@@ -11,7 +11,13 @@ console.log(fib(12));
 console.log(fib(5));
 
 // memoization
-
+const fib = (n, memo = {}) => {
+    if (n in memo) return memo[n];
+    if (n <= 2) return 1;
+    return fib(n-1) + fib(n-2)
+}
+console.log(fib(12));
+console.log(fib(5));
 
 
 const foo = (n) => {
