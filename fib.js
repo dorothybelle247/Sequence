@@ -60,3 +60,98 @@ console.log(gridTraveler(1, 1));
 console.log(gridTraveler(22, 12));
 console.log(gridTraveler(3, 2));
 console.log(gridTraveler(1, 1));
+
+//memoization dynamic
+{/*
+Write a function `canSum(targetSum, numbers)` that takes in a targetSum and an of numbers as argunents
+*/}
+const canSum = (targetSum, numbers, memo={}) => {
+    if (targetSum in memo) return memo[targetSum]
+    if (targetSum === 0) return true;
+    if (targetSum < 0) return false;
+    for (let num of numbers){
+        console.log(num)
+        const remainder = targetSum - num;
+       if (canSum(remainder, numbers, memo) === true){
+           memo[targetSum] = true;
+           return true; 
+       }
+    }
+    memo[targetSum] = false;
+    return false;
+}
+
+console.log(canSum(5,[3,2]))
+console.log(canSum(40,[20,60]))
+
+{/*
+write a function `howSum(targetSum, numbers)` that takes in a targetSum and an array of numbers as arguments.
+*/}
+
+const howSum = (targetSum, numbers, memo={}) => {
+    if (targetSum in memo) return memo[targetSum];
+    if (targetSum === 0) return [];
+    if (targetSum < 0) return null;
+
+    for (let num of numbers){
+        const remainder = targetSum - num;
+       const remaiderResult = howSum(remainder, numbers, memo);
+       if (remaiderResult !== null){
+         memo[targetSum] = [...remaiderResult, num];
+         return memo[targetSum];
+       }
+    }
+    memo[targetSum] = null;
+    return null;
+}
+
+console.log(howSum(7,[5,3,4,7]))
+console.log(howSum(27,[21,6]))
+
+// equals -- optiml numbers for shortest combination
+
+const bestSum = (targetSum, numbers, memo={}) => {
+    if (targetSum in memo) return memo[targetSum];
+    if (targetSum === 0) return[];
+    if (targetSum < 0) return null;
+
+    let shortestCombination = null
+
+    for (let num of numbers){
+        const remainder = targetSum - num;
+       const remainderCombination = bestSum(remainder, numbers, memo)
+       if (remainderCombination !== null){
+           const combination = [...remainderCombination, num]
+        //    check
+        if (shortestCombination === null || combination.length < shortestCombination.length){
+            shortestCombination = combination;
+        }
+       }
+    }
+    memo[targetSum] = shortestCombination;
+    return shortestCombination;
+}
+
+console.log(bestSum(7,[5,3,4,7]))
+console.log(bestSum(27,[21,6]))
+console.log(bestSum(9,[1,6,3,3]))
+
+{/*write a function `canConstruct(target, workbank)` that accepts a target string and an array of strings.*/}
+
+const canConstruct =(target, wordBank) => {
+    if (target === '') {
+        return true;
+    }
+    for (let word of wordBank){
+        if (target.indexOf(word) === 0){
+           const suffix = target.slice(word.length)
+          if (canConstruct(suffix, wordBank) === true){
+              return true
+          }
+        }
+    }
+    return false;
+}
+
+console.log(canConstruct("at", ["cat", "dog", "mouse"]));
+console.log(canConstruct("gog", ["cat", "dog", "mouse"]));
